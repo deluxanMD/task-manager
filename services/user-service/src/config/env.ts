@@ -3,9 +3,6 @@ import * as z from "zod";
 
 dotenv.config();
 
-console.log("JWT_SECRET value:", process.env.JWT_SECRET);
-console.log("JWT_SECRET length:", process.env.JWT_SECRET?.length);
-
 const envSchema = z.object({
   PORT: z
     .string()
