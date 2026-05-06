@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 
 import { env } from "./config/env";
+import { authRouter } from "./routes/auth.routes";
 
 const app = express();
 
@@ -15,10 +16,8 @@ app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({ status: "UP", service: "user-service" });
 });
 
-// Authentication Routes
-app.post("/api/auth/register", (req: Request, res: Response) => {});
-
-app.post("/api/auth/login", (req: Request, res: Response) => {});
+// Auth Routes
+app.use("/api/auth", authRouter);
 
 // Error Handler
 app.use(
