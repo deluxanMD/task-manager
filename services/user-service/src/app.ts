@@ -3,6 +3,7 @@ import cors from "cors";
 
 import { env } from "./config/env";
 import { authRouter } from "./routes/auth.routes";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 
@@ -10,6 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(errorHandler);
 
 // Health Route
 app.get("/health", (req: Request, res: Response) => {
@@ -18,23 +20,5 @@ app.get("/health", (req: Request, res: Response) => {
 
 // Auth Routes
 app.use("/api/auth", authRouter);
-
-// Error Handler
-app.use(
-  (
-    err: Error & { statusCode?: number },
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    const statusCode = err.statusCode || 500;
-
-    res.status(statusCode).json({
-      success: false,
-      message: err.message || "Internal Server Error",
-      stack: env.NODE_ENV === "development" ? err.stack : undefined,
-    });
-  },
-);
 
 export { app };
