@@ -11,14 +11,16 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(errorHandler);
 
 // Health Route
-app.get("/health", (req: Request, res: Response) => {
+app.get("/api/auth/health", (req: Request, res: Response) => {
   res.status(200).json({ status: "UP", service: "user-service" });
 });
 
 // Auth Routes
 app.use("/api/auth", authRouter);
+
+// Error Handler
+app.use(errorHandler);
 
 export { app };
