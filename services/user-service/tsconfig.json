@@ -5,13 +5,14 @@
     "lib": ["ES2020"],
     "rootDir": "./src",
     "outDir": "./dist",
-    "strict": false,
+    "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "declaration": true
+    "declaration": true,
+    "types": ["jest", "node"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "tests"]
+  "include": ["src/**/*", "tests"],
+  "exclude": ["node_modules", "dist"]
 }
