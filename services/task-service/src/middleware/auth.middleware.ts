@@ -5,7 +5,7 @@ import { AppError } from "../errors/AppError";
 
 export const authMiddleware = (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ) => {
   const token = req.cookies.token;
