@@ -13,6 +13,6 @@
     "declaration": true,
     "types": ["jest", "node"]
   },
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["src/**/*", "tests/**/*", "knexfile.ts"],
   "exclude": ["node_modules", "dist"]
 }
