@@ -10,8 +10,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "rimraf dist && tsc",
     "start": "node dist/index.js",
-    "test": "jest --runInBand",
-    "test:watch": "jest --runInBand --watch"
+    "test": "NODE_ENV=test jest --runInBand",
+    "test:watch": "NODE_ENV=test jest --runInBand --watch"
   },
   "keywords": [],
   "author": "",
