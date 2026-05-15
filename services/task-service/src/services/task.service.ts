@@ -4,6 +4,7 @@ import TaskModel, {
   Task,
   UpdateTaskInput,
 } from "../models/task.model";
+import { producer } from "../config/kafka";
 
 export const createTask = async (
   userId: string,
@@ -60,6 +61,29 @@ export const updateTask = async (
     await getTaskById(id, userId);
     const updated = await TaskModel.updateById(id, data);
     if (!updated) throw new AppError(404, "Task not found");
+
+    if (data.status === "completed") {
+      try {
+        await producer.send({
+          topic: "task.completed",
+          messages: [
+            {
+              key: id,
+              value: JSON.stringify({
+                taskId: updated.id,
+                userId: updated.user_id,
+                title: updated.title,
+                completedAt: new Date().toISOString(),
+              }),
+            },
+          ],
+        });
+        console.log(`Event published to task.completed for task ${id}`);
+      } catch (kafkaError) {
+        console.error("Failed to publish task.completed event:", kafkaError);
+      }
+    }
+
     return updated;
   } catch (error) {
     if (error instanceof AppError) throw error;

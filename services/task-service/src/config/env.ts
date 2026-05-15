@@ -22,6 +22,7 @@ const envSchema = z.object({
   DB_TEST_NAME: z.string().min(1).default("taskmanager_tasks_test"),
   JWT_SECRET: z.string().min(32),
   JWT_EXPIRES_IN: z.string().default("24h"),
+  KAFKA_BROKER: z.string().default("localhost:9092"),
 });
 
 const _env = envSchema.safeParse(process.env);
