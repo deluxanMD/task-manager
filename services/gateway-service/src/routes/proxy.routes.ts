@@ -1,7 +1,8 @@
 import { Router } from "express";
 import {
   invalidateCacheMiddleware,
-  taskProxyMiddleware,
+  taskReadProxyMiddleware,
+  taskWriteProxyMiddleware,
   userProxyMiddleware,
 } from "../middleware/proxy.middleware";
 import { authMiddleware } from "../middleware/auth.middleware";
@@ -14,14 +15,19 @@ router.post(
   "/api/tasks",
   authMiddleware,
   invalidateCacheMiddleware,
-  taskProxyMiddleware,
+  taskWriteProxyMiddleware,
 );
 router.patch(
   "/api/tasks/:id",
   authMiddleware,
   invalidateCacheMiddleware,
-  taskProxyMiddleware,
+  taskWriteProxyMiddleware,
 );
-router.use("/api/tasks", authMiddleware, cacheMiddleware, taskProxyMiddleware);
+router.use(
+  "/api/tasks",
+  authMiddleware,
+  cacheMiddleware,
+  taskReadProxyMiddleware,
+);
 
 export { router as proxyRouter };

@@ -6,10 +6,10 @@ export const cacheMiddleware = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const userId = req.user?.userId;
-
-  if (!userId) return next();
   if (req.method !== "GET") return next();
+
+  const userId = req.user?.userId;
+  if (!userId) return next();
 
   const cacheKey = `tasks:${userId}`;
 
@@ -18,26 +18,18 @@ export const cacheMiddleware = async (
 
     if (cachedData) {
       console.log(`Cache hit for ${cacheKey}`);
-      return res.status(200).json(JSON.parse(cachedData));
+      try {
+        return res.status(200).json(JSON.parse(cachedData));
+      } catch {
+        await redis.del(cacheKey);
+        console.log(`Corrupt cache cleared for ${cacheKey}`);
+      }
     }
 
     console.log(`Cache miss for ${cacheKey}`);
-
-    const originalJson = res.json.bind(res);
-
-    res.json = (body): Response => {
-      if (res.statusCode === 200) {
-        redis
-          .set(cacheKey, JSON.stringify(body), "EX", 3600)
-          .catch((err) => console.error("Redis save error:", err));
-      }
-
-      return originalJson(body);
-    };
-
     next();
   } catch (error) {
-    console.error("Cache middleware error:", error);
+    console.error("Cache read error:", error);
     next();
   }
 };
